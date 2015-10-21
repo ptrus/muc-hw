@@ -13,4 +13,12 @@
     <string name="password_retype">Please retype the password</string>
     <string name="register">Register</string>
     <string name="consent">This application collects location and wireless environment (WiFi) information from the phone. The information is stored on the phone and on the Google Cloud, and the access is granted to the instructors of, and students registered for the Mobile and Ubiquitous Computing class at FRI, Ljubljana, Slovenia, and solely for educational and research purposes. In case the analysis of the data is published. the results will not refer to any single individual and will not reveal participants\' identities. You have the right to uninstall the application at any point, and, if you wish, all the collected data that relates to you will be destroyed. By clicking the \"Register\" button below, you confirm that you have read and understood the above information.</string>
+    <string name="occupation_error">Occupation field should not be empty.</string>
+    <string name="first_name_error">First name field should not be empty.</string>
+    <string name="last_name_error">Last name field should not be empty.</string>
+    <string name="age_error">Age should be a positive integer number.</string>
+    <string name="password_error">Password has to be between 8 and 16 characters long.</string>
+    <string name="password_retype_error">Passwords do not match.</string>
+    <string name="email_error">Invalid email.</string>
+    <string name="sex_error">Please select your sex.</string>
 </resources>
