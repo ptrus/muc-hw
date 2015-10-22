@@ -1,5 +1,6 @@
 package com.example.peterus.muc_hw;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -38,10 +39,13 @@ public class RegistrationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // For now.
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+
         setContentView(R.layout.registration_layout);
-
         initFields();
-
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

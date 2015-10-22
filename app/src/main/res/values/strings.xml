@@ -21,4 +21,7 @@
     <string name="password_retype_error">Passwords do not match.</string>
     <string name="email_error">Invalid email.</string>
     <string name="sex_error">Please select your sex.</string>
+    <string name="map">Map</string>
+    <string name="summary">Summary</string>
+    <string name="settings">Settings</string>
 </resources>
