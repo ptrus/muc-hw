@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MUC-hw</string>
+    <string name="app_name">Signal Mapper</string>
     <string name="fill_demographics">Please fill out your demographics</string>
     <string name="occupation">Occupation</string>
     <string name="age">Age</string>
@@ -24,4 +24,12 @@
     <string name="map">Map</string>
     <string name="summary">Summary</string>
     <string name="settings">Settings</string>
+    <string name="click_photo">Click on the photo to activate the camera.</string>
+    <string name="change_sampling_settings">You can change sampling settings here.</string>
+    <string name="change_sampling_interval">Sampling interval (minutes):</string>
+    <string name="confirm">Confirm</string>
+    <string name="average_rssi_home">Average RSSI at home:</string>
+    <string name="average_rssi_work">Average RSSI at work:</string>
+    <string name="strongest_wifi_aps">Strongest WiFi APs:</string>
+    <string name="sampling_interval_error">Sampling interval must be a positive integer.</string>
 </resources>

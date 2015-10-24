@@ -1,7 +1,6 @@
 package com.example.peterus.muc_hw;
 
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +8,17 @@ import android.util.Log;
 
 /**
  * Created by peterus on 22.10.2015.
+ */
+
+/* TODO:
+    - remove example from package name
+    - rename id's of layouts to contain layout name
+    - Refactor: -fragments to fragments package
+                -validation to helper package
+                -rename pager adapter to: settingspageradapter?
+                -test map
+                -test app
+
  */
 public class MainActivity extends AppCompatActivity {
 

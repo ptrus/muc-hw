@@ -40,10 +40,11 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // For now.
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-
+        // If user is already registered launch MainActivity.
+        if (isRegistered()) {
+            startMainActivity();
+        }
+        // Else continue on registration screen.
         setContentView(R.layout.registration_layout);
         initFields();
         registerBtn.setOnClickListener(new View.OnClickListener() {
@@ -52,6 +53,11 @@ public class RegistrationActivity extends AppCompatActivity {
                 onClickRegisterButton();
             }
         });
+    }
+
+    private boolean isRegistered() {
+        SharedPreferences settings = getSharedPreferences(ACC_PREFS, MODE_PRIVATE);
+        return settings.getBoolean("registered", false);
     }
 
     private void onClickRegisterButton() {
@@ -142,8 +148,16 @@ public class RegistrationActivity extends AppCompatActivity {
             settingsEditor.putString("md5", passwordMD5.toString());
             settingsEditor.putString("uuid", uuid.toString());
             settingsEditor.putLong("unixTime", unixTime);
+            settingsEditor.putBoolean("registered", true);
             settingsEditor.commit();
+
+            startMainActivity();
         }
+    }
+
+    private void startMainActivity() {
+        Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 
 

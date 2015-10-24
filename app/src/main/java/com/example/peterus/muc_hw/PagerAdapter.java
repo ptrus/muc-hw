@@ -24,8 +24,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position){
         switch (position){
             case 0:
-                //Fragment1 t = new Framgement1();
-                return new SummaryFragment();
+                return new ConnectionMapFragment();
             case 1:
                 return new SummaryFragment();
             case 2:
