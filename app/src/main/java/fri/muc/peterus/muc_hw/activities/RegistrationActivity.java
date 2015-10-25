@@ -12,6 +12,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import fri.muc.peterus.muc_hw.R;
+import fri.muc.peterus.muc_hw.helpers.AsteriskPasswordTransformationMethod;
 import fri.muc.peterus.muc_hw.helpers.Validation;
 
 import java.security.MessageDigest;
@@ -168,6 +169,10 @@ public class RegistrationActivity extends AppCompatActivity {
         passwordEdit = (EditText) findViewById(R.id.registration_password_edit);
         passwordRetypeEdit = (EditText) findViewById(R.id.registration_password_retype_edit);
         registerBtn = (Button) findViewById(R.id.registration_register_button);
+
+        // Set asterisks (*) instead of dots in password fields.
+        passwordEdit.setTransformationMethod(new AsteriskPasswordTransformationMethod());
+        passwordRetypeEdit.setTransformationMethod(new AsteriskPasswordTransformationMethod());
     }
 
 }

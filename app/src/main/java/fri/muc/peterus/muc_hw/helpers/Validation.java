@@ -15,7 +15,7 @@ public class Validation {
     public static boolean isPositiveInteger(String str){
         if (str != null && str.matches("^\\d+$")){
             int num = Integer.parseInt(str);
-            return num > 0 && num < 150;
+            return num > 0;
         }
         return false;
     }
