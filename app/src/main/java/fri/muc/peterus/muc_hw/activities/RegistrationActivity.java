@@ -43,11 +43,6 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // If user is already registered launch MainActivity.
-        if (isRegistered()) {
-            startMainActivity();
-        }
-        // Else continue with registration screen.
         setContentView(R.layout.registration_layout);
         initFields();
         registerBtn.setOnClickListener(new View.OnClickListener() {
@@ -56,11 +51,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 onClickRegisterButton();
             }
         });
-    }
-
-    private boolean isRegistered() {
-        SharedPreferences settings = getSharedPreferences(ACC_PREFS, MODE_PRIVATE);
-        return settings.getBoolean("registered", false);
     }
 
     private void onClickRegisterButton() {
@@ -147,7 +137,7 @@ public class RegistrationActivity extends AppCompatActivity {
             settingsEditor.putString("occupation", occupationText);
             int age = Integer.parseInt(ageText);
             settingsEditor.putInt("age", age);
-            String sex = sexId == R.id.female_button ? "F" : "M";
+            String sex = sexId == R.id.registration_female_button ? "F" : "M";
             settingsEditor.putString("sex", sex);
             settingsEditor.putString("email", emailText);
             settingsEditor.putString("md5", passwordMD5.toString());

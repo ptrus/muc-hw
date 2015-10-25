@@ -10,8 +10,8 @@
         android:id="@+id/click_photo_view" />
 
     <ImageView
-        android:layout_width="140dp"
-        android:layout_height="140dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:id="@+id/settings_profile_imageView"
         android:minWidth="200dp"
         android:minHeight="200dp"

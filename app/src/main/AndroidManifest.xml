@@ -9,12 +9,14 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCCm04Nmi8A-5a6buyb7Er6CrfwvBVRe90"/>
 
-        <activity android:name=".activities.RegistrationActivity" android:label="@string/app_name">
+        <activity android:name=".activities.StartActivity" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".activities.RegistrationActivity" android:label="@string/app_name"/>
 
         <activity android:name=".activities.MainActivity" android:label="@string/app_name" />
 

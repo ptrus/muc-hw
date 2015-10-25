@@ -120,12 +120,12 @@ public class SettingsFragment extends Fragment {
 
     private void initFields() {
         // Init fields.
-        profileImageView = (ImageView) getActivity().findViewById(R.id.settings_profile_imageView);
-        firstNameEdit = (EditText) getActivity().findViewById(R.id.settings_first_name_edit);
-        lastNameEdit = (EditText) getActivity().findViewById(R.id.settings_last_name_edit);
-        emailEdit = (EditText) getActivity().findViewById(R.id.settings_email_edit);
-        samplingIntervalEdit = (EditText) getActivity().findViewById(R.id.settings_sampling_interval_edit);
-        confirmButton = (Button) getActivity().findViewById(R.id.settings_confirm_button);
+        profileImageView = (ImageView) getView().findViewById(R.id.settings_profile_imageView);
+        firstNameEdit = (EditText) getView().findViewById(R.id.settings_first_name_edit);
+        lastNameEdit = (EditText) getView().findViewById(R.id.settings_last_name_edit);
+        emailEdit = (EditText) getView().findViewById(R.id.settings_email_edit);
+        samplingIntervalEdit = (EditText) getView().findViewById(R.id.settings_sampling_interval_edit);
+        confirmButton = (Button) getView().findViewById(R.id.settings_confirm_button);
 
         // Get stored data.
         SharedPreferences settings = getActivity().getSharedPreferences(RegistrationActivity.ACC_PREFS, getActivity().MODE_PRIVATE);
@@ -139,6 +139,6 @@ public class SettingsFragment extends Fragment {
         lastNameEdit.setText(lastName);
         emailEdit.setText(email);
         if (samplingInterval != -1)
-            samplingIntervalEdit.setText(samplingInterval);
+            samplingIntervalEdit.setText(Integer.toString(samplingInterval));
     }
 }
