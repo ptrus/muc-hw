@@ -1,82 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/registration_scroll_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/click_photo"
-        android:id="@+id/click_photo_view" />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/settings_profile_imageView"
-        android:minWidth="200dp"
-        android:minHeight="200dp"
-        android:src="@drawable/camera90"
-        android:maxHeight="200dp"
-        android:maxWidth="200dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/click_photo"
+            android:id="@+id/click_photo_view" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Your personal details:"
-        android:id="@+id/settings_personal_details_view" />
+        <ImageView
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:id="@+id/settings_profile_imageView"
+            android:minWidth="200dp"
+            android:minHeight="200dp"
+            android:src="@drawable/camera90"
+            android:maxHeight="200dp"
+            android:maxWidth="200dp" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/settings_first_name_edit" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your personal details:"
+            android:id="@+id/settings_personal_details_view" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-        android:ems="10"
-        android:id="@+id/settings_last_name_edit" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/settings_first_name_edit" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:id="@+id/settings_email_edit" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/settings_last_name_edit" />
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="#000000" />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:ems="10"
+            android:id="@+id/settings_email_edit" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/change_sampling_settings"
-        android:id="@+id/settings_sample_settings_view" />
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="#000000" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/change_sampling_interval"
-        android:id="@+id/settings_sampling_interval_view"
-        android:paddingTop="10dp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/change_sampling_settings"
+            android:id="@+id/settings_sample_settings_view" />
 
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:ems="10"
-        android:id="@+id/settings_sampling_interval_edit" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/change_sampling_interval"
+            android:id="@+id/settings_sampling_interval_view"
+            android:paddingTop="10dp" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/confirm"
-        android:id="@+id/settings_confirm_button"
-        android:layout_gravity="center_horizontal"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/settings_sampling_interval_edit" />
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/confirm"
+            android:id="@+id/settings_confirm_button"
+            android:layout_gravity="center_horizontal"/>
 
-</LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
