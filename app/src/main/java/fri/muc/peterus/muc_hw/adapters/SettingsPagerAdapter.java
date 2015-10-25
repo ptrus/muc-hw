@@ -1,16 +1,20 @@
-package com.example.peterus.muc_hw;
+package fri.muc.peterus.muc_hw.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import fri.muc.peterus.muc_hw.fragments.ConnectionMapFragment;
+import fri.muc.peterus.muc_hw.fragments.SettingsFragment;
+import fri.muc.peterus.muc_hw.fragments.SummaryFragment;
+
 /**
  * Created by peterus on 22.10.2015.
  */
-public class PagerAdapter extends FragmentStatePagerAdapter {
+public class SettingsPagerAdapter extends FragmentStatePagerAdapter {
     private int nTabs;
 
-    public PagerAdapter(FragmentManager fm, int nTabs){
+    public SettingsPagerAdapter(FragmentManager fm, int nTabs){
         super(fm);
         this.nTabs = nTabs;
     }

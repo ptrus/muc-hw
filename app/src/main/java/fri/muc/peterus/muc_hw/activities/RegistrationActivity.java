@@ -1,4 +1,4 @@
-package com.example.peterus.muc_hw;
+package fri.muc.peterus.muc_hw.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+
+import fri.muc.peterus.muc_hw.R;
+import fri.muc.peterus.muc_hw.helpers.Validation;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -44,7 +47,7 @@ public class RegistrationActivity extends AppCompatActivity {
         if (isRegistered()) {
             startMainActivity();
         }
-        // Else continue on registration screen.
+        // Else continue with registration screen.
         setContentView(R.layout.registration_layout);
         initFields();
         registerBtn.setOnClickListener(new View.OnClickListener() {
@@ -63,6 +66,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private void onClickRegisterButton() {
         formErrors = false;
 
+        // Check for errors.
         String occupationText = occupationEdit.getText().toString();
         String ageText = ageEdit.getText().toString();
         int sexId = sexRadioGroup.getCheckedRadioButtonId();
@@ -121,6 +125,7 @@ public class RegistrationActivity extends AppCompatActivity {
             maleRadioButton.setError(getResources().getString(R.string.sex_error));
         }
 
+        // Update settings and go to MainActivity if no errors.
         if (!formErrors){
             byte[] passwordMD5;
             try {
@@ -162,18 +167,17 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
     private void initFields() {
-        occupationEdit = (EditText) findViewById(R.id.occupation_edit);
-        ageEdit = (EditText) findViewById(R.id.age_edit);
-        sexRadioGroup = (RadioGroup) findViewById(R.id.sex_radio_group);
-        maleRadioButton = (RadioButton) findViewById(R.id.male_button);
-        femaleRadioButton = (RadioButton) findViewById(R.id.female_button);
-        firstNameEdit = (EditText) findViewById(R.id.first_name_edit);
-        lastNameEdit = (EditText) findViewById(R.id.last_name_edit);
-        emailEdit = (EditText) findViewById(R.id.email_edit);
-        passwordEdit = (EditText) findViewById(R.id.password_edit);
-        passwordRetypeEdit = (EditText) findViewById(R.id.password_retype_edit);
-        registerBtn = (Button) findViewById(R.id.register_button);
+        occupationEdit = (EditText) findViewById(R.id.registration_occupation_edit);
+        ageEdit = (EditText) findViewById(R.id.registration_age_edit);
+        sexRadioGroup = (RadioGroup) findViewById(R.id.registration_sex_radio_group);
+        maleRadioButton = (RadioButton) findViewById(R.id.registration_male_button);
+        femaleRadioButton = (RadioButton) findViewById(R.id.registration_female_button);
+        firstNameEdit = (EditText) findViewById(R.id.registration_first_name_edit);
+        lastNameEdit = (EditText) findViewById(R.id.registration_last_name_edit);
+        emailEdit = (EditText) findViewById(R.id.registration_email_edit);
+        passwordEdit = (EditText) findViewById(R.id.registration_password_edit);
+        passwordRetypeEdit = (EditText) findViewById(R.id.registration_password_retype_edit);
+        registerBtn = (Button) findViewById(R.id.registration_register_button);
     }
-
 
 }

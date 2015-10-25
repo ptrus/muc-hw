@@ -1,4 +1,4 @@
-package com.example.peterus.muc_hw;
+package fri.muc.peterus.muc_hw.fragments;
 
 import com.google.android.gms.maps.SupportMapFragment;
 

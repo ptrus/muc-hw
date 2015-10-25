@@ -1,4 +1,4 @@
-package com.example.peterus.muc_hw;
+package fri.muc.peterus.muc_hw.helpers;
 
 import android.util.Patterns;
 

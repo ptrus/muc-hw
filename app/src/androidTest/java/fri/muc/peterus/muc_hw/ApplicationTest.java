@@ -1,4 +1,4 @@
-package com.example.peterus.muc_hw;
+package fri.muc.peterus.muc_hw;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

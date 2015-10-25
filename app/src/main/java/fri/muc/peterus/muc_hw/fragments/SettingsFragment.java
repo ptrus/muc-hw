@@ -1,4 +1,4 @@
-package com.example.peterus.muc_hw;
+package fri.muc.peterus.muc_hw.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,6 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import fri.muc.peterus.muc_hw.R;
+import fri.muc.peterus.muc_hw.activities.RegistrationActivity;
+import fri.muc.peterus.muc_hw.helpers.Validation;
 
 /**
  * Created by peterus on 22.10.2015.
@@ -116,11 +120,11 @@ public class SettingsFragment extends Fragment {
 
     private void initFields() {
         // Init fields.
-        profileImageView = (ImageView) getActivity().findViewById(R.id.photo_imageView);
+        profileImageView = (ImageView) getActivity().findViewById(R.id.settings_profile_imageView);
         firstNameEdit = (EditText) getActivity().findViewById(R.id.settings_first_name_edit);
         lastNameEdit = (EditText) getActivity().findViewById(R.id.settings_last_name_edit);
         emailEdit = (EditText) getActivity().findViewById(R.id.settings_email_edit);
-        samplingIntervalEdit = (EditText) getActivity().findViewById(R.id.sampling_interval_edit);
+        samplingIntervalEdit = (EditText) getActivity().findViewById(R.id.settings_sampling_interval_edit);
         confirmButton = (Button) getActivity().findViewById(R.id.settings_confirm_button);
 
         // Get stored data.

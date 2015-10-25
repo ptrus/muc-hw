@@ -7,22 +7,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/average_rssi_home"
-        android:id="@+id/rssi_home_view" />
+        android:id="@+id/summary_rssi_home_view" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/average_rssi_work"
-        android:id="@+id/rssi_work_view"
+        android:id="@+id/summary_rssi_work_view"
         android:paddingTop="10dp" />
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/strongest_wifi_aps"
-        android:id="@+id/strongest_wifi_aps_view"
+        android:id="@+id/summary_strongest_wifi_aps_view"
         android:paddingTop="10dp" />
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/listView" />
+        android:id="@+id/summary_listView" />
 </LinearLayout>
