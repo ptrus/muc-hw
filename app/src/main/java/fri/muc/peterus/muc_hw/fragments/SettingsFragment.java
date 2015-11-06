@@ -1,12 +1,14 @@
 package fri.muc.peterus.muc_hw.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +16,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import fri.muc.peterus.muc_hw.R;
 import fri.muc.peterus.muc_hw.activities.RegistrationActivity;
+import fri.muc.peterus.muc_hw.helpers.StorageHelpers;
 import fri.muc.peterus.muc_hw.helpers.Validation;
 
 /**
@@ -111,12 +119,47 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK){
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             profileImageView.setImageBitmap(imageBitmap);
+            String profileImagePath = saveProfilePicture(imageBitmap);
+            Log.d("OnActivityResult", "Profile image path:"+profileImagePath);
+            SharedPreferences settings = getActivity().getSharedPreferences(RegistrationActivity.ACC_PREFS, getActivity().MODE_PRIVATE);
+            SharedPreferences.Editor settingsEditor = settings.edit();
+            settingsEditor.putString("profileImagePath", profileImagePath);
+            settingsEditor.commit();
         }
     }
+
+    private String saveProfilePicture(Bitmap imageBitmap){
+        if (StorageHelpers.isExternalStorageWritable()){
+            File f = StorageHelpers.getAlbumStorageDir("MUC Profile");
+            try {
+                FileOutputStream out = new FileOutputStream(f);
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                out.flush();
+                out.close();
+                return f.getAbsolutePath();
+            } catch (IOException e) {
+                Log.e("SettingsFragment", "Profile picture not saved.");
+            }
+        }
+        else{
+            String fileName = getActivity().getFilesDir() + "/profilePic";
+            try {
+                FileOutputStream out = new FileOutputStream(new File(fileName));
+                imageBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                out.flush();
+                out.close();
+                return fileName;
+            } catch (IOException e) {
+                Log.e("SettingsFragment", "Profile picture not saved.");
+            }
+        }
+        return "";
+    }
+
 
     private void initFields() {
         // Init fields.
@@ -133,6 +176,7 @@ public class SettingsFragment extends Fragment {
         String lastName = settings.getString("lastName", "Default Name");
         String email = settings.getString("email", "default@email.com");
         int samplingInterval = settings.getInt("samplingInterval", -1);
+        String profileImagePath = settings.getString("profileImagePath", "");
 
         // Update fields.
         firstNameEdit.setText(firstName);
@@ -140,5 +184,10 @@ public class SettingsFragment extends Fragment {
         emailEdit.setText(email);
         if (samplingInterval != -1)
             samplingIntervalEdit.setText(Integer.toString(samplingInterval));
+        Log.d("SettingsFragment", "ProfileImagePath:" + profileImagePath);
+        if (!profileImagePath.equals("")) {
+            Bitmap profileImage = StorageHelpers.getProfilePicture(profileImagePath);
+            profileImageView.setImageBitmap(profileImage);
+        }
     }
 }

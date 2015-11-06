@@ -1,10 +1,18 @@
 package fri.muc.peterus.muc_hw.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import java.util.Calendar;
+import java.util.Date;
+
+import fri.muc.peterus.muc_hw.services.LocationIntentService;
 
 /**
  * Created by peterus on 25.10.2015.
@@ -25,7 +33,7 @@ public class StartActivity extends AppCompatActivity {
 
     private boolean isRegistered() {
         SharedPreferences settings = getSharedPreferences(RegistrationActivity.ACC_PREFS, MODE_PRIVATE);
-        Log.d("StartActivity", "BOOL:"+settings.getBoolean("registered", false));
+        Log.d("StartActivity", "BOOL:" + settings.getBoolean("registered", false));
         return settings.getBoolean("registered", false);
     }
 }
