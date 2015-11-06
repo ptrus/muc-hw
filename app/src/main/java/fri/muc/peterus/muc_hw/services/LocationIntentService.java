@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.Bundle;
@@ -126,6 +127,15 @@ public class LocationIntentService extends IntentService implements GoogleApiCli
         values.put(LocationsSQLiteOpenHelper.LNG, lng);
         values.put(LocationsSQLiteOpenHelper.LABEL, label);
         writableDatabase.insert(LocationsSQLiteOpenHelper.TABLE_NAME, null, values);
+        Cursor c = writableDatabase.rawQuery("select * from " + LocationsSQLiteOpenHelper.TABLE_NAME, new String[]{});
+        int count = c.getCount();
         writableDatabase.close();
+        Log.d("LocationIntentService", "COUNT:" + count);
+
+        // We cluster every X readings.
+        if (count  % Constants.CLUST_THRESHOLD == 0){
+            Intent intent = new Intent(ApplicationContext.getContext(), LocationMachineLearningIntentService.class);
+            startService(intent);
+        }
     }
 }

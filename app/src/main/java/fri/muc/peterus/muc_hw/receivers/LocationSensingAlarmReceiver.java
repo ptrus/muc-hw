@@ -43,16 +43,19 @@ public class LocationSensingAlarmReceiver extends BroadcastReceiver{
 
         Calendar workStart = Calendar.getInstance();
         workStart.set(Calendar.HOUR_OF_DAY, Constants.WORK_START);
+        workStart.set(Calendar.MINUTE, 0);
 
         Calendar workStop = Calendar.getInstance();
         workStop.set(Calendar.HOUR_OF_DAY, Constants.WORK_STOP);
+        workStop.set(Calendar.MINUTE, 0);
 
         Calendar sleepStart = Calendar.getInstance();
         sleepStart.set(Calendar.HOUR_OF_DAY, Constants.SLEEP_START);
+        sleepStart.set(Calendar.MINUTE, 0);
 
         Calendar sleepStop = Calendar.getInstance();
         sleepStop.set(Calendar.HOUR_OF_DAY, Constants.SLEEP_STOP);
-
+        sleepStop.set(Calendar.MINUTE, 0);
         if (now.before(workStop) && workStart.before(now)){
             // At work.
             alarmPeriod = Constants.LOCATION_UPDATE_INTERVAL_MILLIS_ACTIVE;
