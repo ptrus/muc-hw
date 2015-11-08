@@ -25,15 +25,15 @@ public class StartActivity extends AppCompatActivity {
 
         Class activityClass = isRegistered() ? MainActivity.class : RegistrationActivity.class;
         Intent newActivity = new Intent(this, activityClass);
+        newActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(newActivity);
 
         // End the activity, to prevent going back to this empty activity.
-        finish();
+        //finish();
     }
 
     private boolean isRegistered() {
         SharedPreferences settings = getSharedPreferences(RegistrationActivity.ACC_PREFS, MODE_PRIVATE);
-        Log.d("StartActivity", "BOOL:" + settings.getBoolean("registered", false));
         return settings.getBoolean("registered", false);
     }
 }

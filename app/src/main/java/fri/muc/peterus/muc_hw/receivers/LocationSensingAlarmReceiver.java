@@ -7,8 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.SystemClock;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -25,10 +23,8 @@ public class LocationSensingAlarmReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Toast.makeText(context, "Alarm received", Toast.LENGTH_LONG).show();
 
         String action = getActionAndUpdateAlarmPeriod();
-        Log.d("LocationSensingAlarm", "Action: " + action + " alarmPeriod: " + alarmPeriod);
         if (action != null) {
             Intent i = new Intent(context, LocationIntentService.class);
             intent.putExtra("action", action);
@@ -87,7 +83,6 @@ public class LocationSensingAlarmReceiver extends BroadcastReceiver{
     }
 
     public static void startAlarm(Context context){
-        Log.d("LocationSensingAlarm", "Started alarm in:" + alarmPeriod);
         Intent intent = new Intent(ALARM_ACTION);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
 

@@ -153,6 +153,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private void startMainActivity() {
         Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
 

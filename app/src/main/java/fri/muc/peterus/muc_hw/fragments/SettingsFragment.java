@@ -124,8 +124,8 @@ public class SettingsFragment extends Fragment {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             profileImageView.setImageBitmap(imageBitmap);
             String profileImagePath = saveProfilePicture(imageBitmap);
-            Log.d("OnActivityResult", "Profile image path:"+profileImagePath);
-            SharedPreferences settings = getActivity().getSharedPreferences(RegistrationActivity.ACC_PREFS, getActivity().MODE_PRIVATE);
+
+            SharedPreferences settings = getActivity().getSharedPreferences(RegistrationActivity.ACC_PREFS, Context.MODE_PRIVATE);
             SharedPreferences.Editor settingsEditor = settings.edit();
             settingsEditor.putString("profileImagePath", profileImagePath);
             settingsEditor.commit();
@@ -184,7 +184,7 @@ public class SettingsFragment extends Fragment {
         emailEdit.setText(email);
         if (samplingInterval != -1)
             samplingIntervalEdit.setText(Integer.toString(samplingInterval));
-        Log.d("SettingsFragment", "ProfileImagePath:" + profileImagePath);
+
         if (!profileImagePath.equals("")) {
             Bitmap profileImage = StorageHelpers.getProfilePicture(profileImagePath);
             profileImageView.setImageBitmap(profileImage);
