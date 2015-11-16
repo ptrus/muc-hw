@@ -5,11 +5,13 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.SystemClock;
 
 import java.util.Calendar;
 
+import fri.muc.peterus.muc_hw.activities.RegistrationActivity;
 import fri.muc.peterus.muc_hw.helpers.ApplicationContext;
 import fri.muc.peterus.muc_hw.helpers.Constants;
 import fri.muc.peterus.muc_hw.services.LocationIntentService;
@@ -23,6 +25,11 @@ public class LocationSensingAlarmReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        SharedPreferences settings = context.getSharedPreferences(RegistrationActivity.ACC_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor settingsEditor = settings.edit();
+        int triggerId = settings.getInt("triggerId", -1);
+        settingsEditor.putInt("triggerId", triggerId + 1);
+        settingsEditor.commit();
 
         String action = getActionAndUpdateAlarmPeriod();
         if (action != null) {

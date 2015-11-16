@@ -2,6 +2,7 @@
     package="fri.muc.peterus.muc_hw">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -32,9 +33,10 @@
             <intent-filter>
                 <action android:name="si.uni_lj.fri.muc.periodicsensing.ALARM_ACTION" />
             </intent-filter>
-        </receiver>
+        </receiver> x
 
         <service android:name=".services.LocationIntentService" />
+        <service android:name=".services.WiFiConnectivityIntentService" />
         <service android:name=".services.LocationMachineLearningIntentService" />
     </application>
 

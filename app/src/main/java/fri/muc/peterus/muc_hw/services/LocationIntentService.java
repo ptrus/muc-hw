@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
@@ -21,6 +22,7 @@ import com.google.android.gms.location.LocationServices;
 
 import java.util.Calendar;
 
+import fri.muc.peterus.muc_hw.activities.RegistrationActivity;
 import fri.muc.peterus.muc_hw.helpers.ApplicationContext;
 import fri.muc.peterus.muc_hw.helpers.Constants;
 import fri.muc.peterus.muc_hw.helpers.LocationsSQLiteOpenHelper;
@@ -114,18 +116,22 @@ public class LocationIntentService extends IntentService implements GoogleApiCli
     public void onLocationChanged(Location location) {
         Toast.makeText(LocationIntentService.this, "On location changed", Toast.LENGTH_LONG).show();
         Log.d("LocationIntentService", "On location changed: " + location.getLatitude() + "," + location.getLongitude());
-        if (location != null)
-            recordLocData(location.getLatitude(), location.getLongitude(), mAction);
+        if (location != null){
+            SharedPreferences settings = ApplicationContext.getContext().getSharedPreferences(RegistrationActivity.ACC_PREFS, Context.MODE_PRIVATE);
+            int triggerId = settings.getInt("triggerId", -1);
+            recordLocData(location.getLatitude(), location.getLongitude(), mAction, triggerId);
+        }
         stopLocationUpdates();
     }
 
-    private void recordLocData(double lat, double lng, String label){
+    private void recordLocData(double lat, double lng, String label, int triggerId){
         Log.d("LocationIntentService", "Storing:"+ lat + " " + lng + " " + label);
         SQLiteDatabase writableDatabase = mDatabaseHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(LocationsSQLiteOpenHelper.LAT, lat);
         values.put(LocationsSQLiteOpenHelper.LNG, lng);
         values.put(LocationsSQLiteOpenHelper.LABEL, label);
+        values.put(LocationsSQLiteOpenHelper.TRIGGER_ID, triggerId);
         writableDatabase.insert(LocationsSQLiteOpenHelper.TABLE_NAME, null, values);
         Cursor c = writableDatabase.rawQuery("select * from " + LocationsSQLiteOpenHelper.TABLE_NAME, new String[]{});
         int count = c.getCount();

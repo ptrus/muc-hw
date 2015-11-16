@@ -13,6 +13,7 @@ public class LocationsSQLiteOpenHelper extends SQLiteOpenHelper {
     public final static String TABLE_NAME = "locations";
     public final static String LAT = "lat";
     public final static String LNG = "lng";
+    public final static String TRIGGER_ID = "triggerId";
     public final static String LABEL = "label";
     public final static String _ID = "_id";
 
@@ -21,6 +22,7 @@ public class LocationsSQLiteOpenHelper extends SQLiteOpenHelper {
                     + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                     + LAT + " REAL NOT NULL,"
                     + LNG + " REAL NOT NULL,"
+                    + TRIGGER_ID + " INTEGER NOT NULL,"
                     + LABEL + " TEXT NOT NULL)";
 
     public LocationsSQLiteOpenHelper(Context context) {
