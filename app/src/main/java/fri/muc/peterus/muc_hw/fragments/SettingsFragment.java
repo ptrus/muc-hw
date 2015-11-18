@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,15 +24,18 @@ import java.io.IOException;
 
 import fri.muc.peterus.muc_hw.R;
 import fri.muc.peterus.muc_hw.activities.RegistrationActivity;
+import fri.muc.peterus.muc_hw.helpers.ApplicationContext;
 import fri.muc.peterus.muc_hw.helpers.StorageHelpers;
 import fri.muc.peterus.muc_hw.helpers.Validation;
+import fri.muc.peterus.muc_hw.receivers.LocationSensingAlarmReceiver;
 
 /**
  * Created by peterus on 22.10.2015.
  */
 public class SettingsFragment extends Fragment {
-    public static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final String TAG = "SettingsFragment";
 
+    public static final int REQUEST_IMAGE_CAPTURE = 1;
     private ImageView profileImageView;
     private EditText firstNameEdit;
     private EditText lastNameEdit;
@@ -189,5 +193,17 @@ public class SettingsFragment extends Fragment {
             Bitmap profileImage = StorageHelpers.getProfilePicture(profileImagePath);
             profileImageView.setImageBitmap(profileImage);
         }
+
+        SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                if (key.equals("samplingInterval")) {
+                    Toast.makeText(ApplicationContext.getContext(), "On samplingIntervalChanged", Toast.LENGTH_LONG).show();
+                    LocationSensingAlarmReceiver.startAlarm(ApplicationContext.getContext());
+                }
+            }
+        };
+        settings.registerOnSharedPreferenceChangeListener(listener);
     }
 }

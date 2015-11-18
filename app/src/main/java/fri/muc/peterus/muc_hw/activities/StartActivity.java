@@ -16,8 +16,6 @@ public class StartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent i = new Intent(this, WiFiConnectivityIntentService.class);
-        this.startService(i);
         Class activityClass = isRegistered() ? MainActivity.class : RegistrationActivity.class;
         Intent newActivity = new Intent(this, activityClass);
         newActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

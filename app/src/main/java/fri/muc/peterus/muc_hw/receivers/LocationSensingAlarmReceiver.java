@@ -14,7 +14,9 @@ import java.util.Calendar;
 import fri.muc.peterus.muc_hw.activities.RegistrationActivity;
 import fri.muc.peterus.muc_hw.helpers.ApplicationContext;
 import fri.muc.peterus.muc_hw.helpers.Constants;
+import fri.muc.peterus.muc_hw.helpers.SensingTriggerHelper;
 import fri.muc.peterus.muc_hw.services.LocationIntentService;
+import fri.muc.peterus.muc_hw.services.WiFiConnectivityIntentService;
 
 /**
  * Created by peterus on 5.11.2015.
@@ -25,17 +27,15 @@ public class LocationSensingAlarmReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        SharedPreferences settings = context.getSharedPreferences(RegistrationActivity.ACC_PREFS, Context.MODE_PRIVATE);
-        SharedPreferences.Editor settingsEditor = settings.edit();
-        int triggerId = settings.getInt("triggerId", -1);
-        settingsEditor.putInt("triggerId", triggerId + 1);
-        settingsEditor.commit();
-
         String action = getActionAndUpdateAlarmPeriod();
         if (action != null) {
+            SensingTriggerHelper.incrementSensingTriggerId();
+
             Intent i = new Intent(context, LocationIntentService.class);
-            intent.putExtra("action", action);
             context.startService(i);
+
+            Intent j = new Intent(context, WiFiConnectivityIntentService.class);
+            context.startService(j);
         }
 
         startAlarm(ApplicationContext.getContext());
@@ -61,13 +61,13 @@ public class LocationSensingAlarmReceiver extends BroadcastReceiver{
         sleepStop.set(Calendar.MINUTE, 0);
         if (now.before(workStop) && workStart.before(now)){
             // At work.
-            alarmPeriod = Constants.LOCATION_UPDATE_INTERVAL_MILLIS_ACTIVE;
+            alarmPeriod = getSamplingUpdateInterval();
             return "work";
         }
 
         else if (now.before(sleepStop) && sleepStart.before(now)){
             // Sleeping.
-            alarmPeriod = Constants.LOCATION_UPDATE_INTERVAL_MILLIS_ACTIVE;
+            alarmPeriod = getSamplingUpdateInterval();
             return "sleep";
         }
 
@@ -93,6 +93,9 @@ public class LocationSensingAlarmReceiver extends BroadcastReceiver{
         Intent intent = new Intent(ALARM_ACTION);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
 
+        // Cancel any previous alarms set.
+        pi.cancel();
+
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
         int type = AlarmManager.ELAPSED_REALTIME_WAKEUP;
@@ -101,5 +104,12 @@ public class LocationSensingAlarmReceiver extends BroadcastReceiver{
             am.setExact(type, fireTime, pi);
         else
             am.set(type, fireTime, pi);
+    }
+
+    private static long getSamplingUpdateInterval(){
+        SharedPreferences settings = ApplicationContext.getContext().getSharedPreferences(RegistrationActivity.ACC_PREFS, Context.MODE_PRIVATE);
+        int minutes = settings.getInt("samplingInterval", Constants.LOCATION_UPDATE_INTERVAL_MINUTES_ACTIVE);
+        long millis = minutes * 60 * 1000;
+        return millis;
     }
 }

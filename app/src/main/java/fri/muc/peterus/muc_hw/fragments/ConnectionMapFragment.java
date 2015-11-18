@@ -1,5 +1,6 @@
 package fri.muc.peterus.muc_hw.fragments;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +19,7 @@ import fri.muc.peterus.muc_hw.activities.RegistrationActivity;
 /**
  * Created by peterus on 23.10.2015.
  */
+
 public class ConnectionMapFragment extends SupportMapFragment {
     public String TAG = "ConnectionMapFragment";
     private GoogleMap mMap;
@@ -26,7 +28,7 @@ public class ConnectionMapFragment extends SupportMapFragment {
     public void onResume() {
         super.onResume();
 
-        SharedPreferences settings = getActivity().getSharedPreferences(RegistrationActivity.ACC_PREFS, getActivity().MODE_PRIVATE);
+        SharedPreferences settings = getActivity().getSharedPreferences(RegistrationActivity.ACC_PREFS, Context.MODE_PRIVATE);
         float workLat = settings.getFloat("workLat", -1);
         float workLng = settings.getFloat("workLng", -1);
         float sleepLat = settings.getFloat("sleepLat", -1);

@@ -13,9 +13,8 @@ import java.util.HashMap;
 
 import fri.muc.peterus.muc_hw.activities.RegistrationActivity;
 import fri.muc.peterus.muc_hw.helpers.ApplicationContext;
-import fri.muc.peterus.muc_hw.helpers.LocationsSQLiteOpenHelper;
+import fri.muc.peterus.muc_hw.helpers.DBOpenHelper;
 import si.uni_lj.fri.lrss.machinelearningtoolkit.MachineLearningManager;
-import si.uni_lj.fri.lrss.machinelearningtoolkit.classifier.Classifier;
 import si.uni_lj.fri.lrss.machinelearningtoolkit.classifier.DensityClustering;
 import si.uni_lj.fri.lrss.machinelearningtoolkit.utils.ClassifierConfig;
 import si.uni_lj.fri.lrss.machinelearningtoolkit.utils.Constants;
@@ -35,7 +34,7 @@ public class LocationMachineLearningIntentService extends IntentService {
     private MachineLearningManager mlManager;
     private Context mContext;
     private DensityClustering mClassifier;
-    private LocationsSQLiteOpenHelper mDatabaseHelper;
+    private DBOpenHelper mDatabaseHelper;
 
     public LocationMachineLearningIntentService() {
         super("LocationMachineLearningIntentService");
@@ -44,7 +43,7 @@ public class LocationMachineLearningIntentService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         mContext = ApplicationContext.getContext();
-        mDatabaseHelper = new LocationsSQLiteOpenHelper(mContext);
+        mDatabaseHelper = new DBOpenHelper(mContext);
         initManager();
         initClustering();
         train();
@@ -92,12 +91,12 @@ public class LocationMachineLearningIntentService extends IntentService {
         ArrayList<Instance> instanceQ = new ArrayList<>();
 
         SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM " + LocationsSQLiteOpenHelper.TABLE_NAME, new String[]{});
+        Cursor c = db.rawQuery("SELECT * FROM " + DBOpenHelper.TABLE_NAME, new String[]{});
         Log.d(TAG, "Going through cursor");
         while(c.moveToNext()){
-            int latId = c.getColumnIndex(LocationsSQLiteOpenHelper.LAT);
-            int lngId = c.getColumnIndex(LocationsSQLiteOpenHelper.LNG);
-            int labelId = c.getColumnIndex(LocationsSQLiteOpenHelper.LABEL);
+            int latId = c.getColumnIndex(DBOpenHelper.LAT);
+            int lngId = c.getColumnIndex(DBOpenHelper.LNG);
+            int labelId = c.getColumnIndex(DBOpenHelper.LABEL);
 
             double lat = c.getDouble(latId);
             double lng = c.getDouble(lngId);
@@ -123,8 +122,9 @@ public class LocationMachineLearningIntentService extends IntentService {
             double[] workCentroids = centroids.get("work");
 
             Log.d(TAG, "Setting centroids");
-            SharedPreferences settings = mContext.getSharedPreferences(RegistrationActivity.ACC_PREFS, mContext.MODE_PRIVATE);
+            SharedPreferences settings = mContext.getSharedPreferences(RegistrationActivity.ACC_PREFS, Context.MODE_PRIVATE);
             SharedPreferences.Editor settingsEditor = settings.edit();
+            settingsEditor.putBoolean("locationClusteringTrained", true);
             settingsEditor.putFloat("sleepLat", (float) sleepCentroids[0]);
             settingsEditor.putFloat("sleepLng", (float) sleepCentroids[1]);
             settingsEditor.putFloat("workLat", (float) workCentroids[0]);
@@ -136,5 +136,10 @@ public class LocationMachineLearningIntentService extends IntentService {
             e.printStackTrace();
         }
 
+    }
+
+    public static boolean isLocationClusteringTrained(){
+        SharedPreferences settings = ApplicationContext.getContext().getSharedPreferences(RegistrationActivity.ACC_PREFS, Context.MODE_PRIVATE);
+        return settings.getBoolean("locationClusteringTrained", false);
     }
 }

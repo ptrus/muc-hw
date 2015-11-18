@@ -25,7 +25,8 @@ import java.util.Calendar;
 import fri.muc.peterus.muc_hw.activities.RegistrationActivity;
 import fri.muc.peterus.muc_hw.helpers.ApplicationContext;
 import fri.muc.peterus.muc_hw.helpers.Constants;
-import fri.muc.peterus.muc_hw.helpers.LocationsSQLiteOpenHelper;
+import fri.muc.peterus.muc_hw.helpers.DBOpenHelper;
+import fri.muc.peterus.muc_hw.helpers.SensingTriggerHelper;
 
 /**
  * Created by peterus on 4.11.2015.
@@ -33,7 +34,7 @@ import fri.muc.peterus.muc_hw.helpers.LocationsSQLiteOpenHelper;
 public class LocationIntentService extends IntentService implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private LocationsSQLiteOpenHelper mDatabaseHelper;
+    private DBOpenHelper mDatabaseHelper;
     private String mAction;
 
     public LocationIntentService() {
@@ -64,7 +65,6 @@ public class LocationIntentService extends IntentService implements GoogleApiCli
     }
 
     protected void stopLocationUpdates() {
-        Log.d("LocationService", "Stop location updates");
         if (mGoogleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
             mGoogleApiClient.disconnect();
@@ -73,10 +73,6 @@ public class LocationIntentService extends IntentService implements GoogleApiCli
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        Calendar now = Calendar.getInstance();
-        Calendar workStart = Calendar.getInstance();
-        workStart.set(Calendar.HOUR_OF_DAY, Constants.WORK_START);
-        mAction = now.before(workStart) ? "sleep" : "work";
         startLocationUpdates();
     }
 
@@ -84,21 +80,16 @@ public class LocationIntentService extends IntentService implements GoogleApiCli
     public void onCreate() {
         super.onCreate();
         buildGoogleApiClient();
-        mDatabaseHelper = new LocationsSQLiteOpenHelper(ApplicationContext.getContext());
-        Log.d("LocationService", "CREATED");
-
+        mDatabaseHelper = new DBOpenHelper(ApplicationContext.getContext());
     }
 
     @Override
     public void onDestroy() {
-        Log.d("LocationService", "DESTROYED");
-
         super.onDestroy();
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.d("LocationService", "CONNECTED");
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
     }
 
@@ -115,26 +106,27 @@ public class LocationIntentService extends IntentService implements GoogleApiCli
     @Override
     public void onLocationChanged(Location location) {
         Toast.makeText(LocationIntentService.this, "On location changed", Toast.LENGTH_LONG).show();
-        Log.d("LocationIntentService", "On location changed: " + location.getLatitude() + "," + location.getLongitude());
         if (location != null){
-            SharedPreferences settings = ApplicationContext.getContext().getSharedPreferences(RegistrationActivity.ACC_PREFS, Context.MODE_PRIVATE);
-            int triggerId = settings.getInt("triggerId", -1);
+            long triggerId = SensingTriggerHelper.getSensingTriggerId();
+            setMAction((float) location.getLatitude(), (float) location.getLongitude());
+            Log.d("LocationIntentService", "On location changed: " + location.getLatitude() + "," + location.getLongitude() + ":" + mAction);
             recordLocData(location.getLatitude(), location.getLongitude(), mAction, triggerId);
         }
         stopLocationUpdates();
     }
 
-    private void recordLocData(double lat, double lng, String label, int triggerId){
+    private void recordLocData(double lat, double lng, String label, long triggerId){
         Log.d("LocationIntentService", "Storing:"+ lat + " " + lng + " " + label);
         SQLiteDatabase writableDatabase = mDatabaseHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(LocationsSQLiteOpenHelper.LAT, lat);
-        values.put(LocationsSQLiteOpenHelper.LNG, lng);
-        values.put(LocationsSQLiteOpenHelper.LABEL, label);
-        values.put(LocationsSQLiteOpenHelper.TRIGGER_ID, triggerId);
-        writableDatabase.insert(LocationsSQLiteOpenHelper.TABLE_NAME, null, values);
-        Cursor c = writableDatabase.rawQuery("select * from " + LocationsSQLiteOpenHelper.TABLE_NAME, new String[]{});
+        values.put(DBOpenHelper.LAT, lat);
+        values.put(DBOpenHelper.LNG, lng);
+        values.put(DBOpenHelper.LABEL, label);
+        values.put(DBOpenHelper.TRIGGER_ID, triggerId);
+        writableDatabase.insert(DBOpenHelper.TABLE_NAME, null, values);
+        Cursor c = writableDatabase.rawQuery("select * from " + DBOpenHelper.TABLE_NAME, new String[]{});
         int count = c.getCount();
+        c.close();
         writableDatabase.close();
         Log.d("LocationIntentService", "COUNT:" + count);
 
@@ -142,6 +134,48 @@ public class LocationIntentService extends IntentService implements GoogleApiCli
         if (count  % Constants.CLUST_THRESHOLD == 0){
             Intent intent = new Intent(ApplicationContext.getContext(), LocationMachineLearningIntentService.class);
             startService(intent);
+        }
+    }
+
+    private static float distMeters(float lat1, float lng1, float lat2, float lng2){
+        double earthRadius = 6371000; //meters
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        float dist = (float) (earthRadius * c);
+
+        return dist;
+    }
+
+    private void setMAction(float currLat, float currLng){
+        if(LocationMachineLearningIntentService.isLocationClusteringTrained()){
+            SharedPreferences settings = ApplicationContext.getContext().getSharedPreferences(RegistrationActivity.ACC_PREFS, Context.MODE_PRIVATE);
+            float workLat = settings.getFloat("workLat", -1);
+            float workLng = settings.getFloat("workLng", -1);
+            float sleepLat = settings.getFloat("sleepLat", -1);
+            float sleepLng = settings.getFloat("sleepLng", -1);
+            float dist2work = distMeters(workLat, workLng, currLat, currLng);
+            float dist2home = distMeters(sleepLat, sleepLng, currLat, currLng);
+
+            if (dist2home < 200){
+                mAction = "sleep";
+            }
+            else if (dist2work < 200){
+                mAction = "work";
+            }
+            else{
+                mAction = "other";
+            }
+
+        }
+        else {
+            Calendar now = Calendar.getInstance();
+            Calendar workStart = Calendar.getInstance();
+            workStart.set(Calendar.HOUR_OF_DAY, Constants.WORK_START);
+            mAction = now.before(workStart) ? "sleep" : "work";
         }
     }
 }

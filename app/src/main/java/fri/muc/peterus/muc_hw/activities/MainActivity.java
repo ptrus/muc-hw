@@ -1,11 +1,13 @@
 package fri.muc.peterus.muc_hw.activities;
 
-import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.Toast;
 
 import fri.muc.peterus.muc_hw.adapters.SettingsPagerAdapter;
 import fri.muc.peterus.muc_hw.R;
@@ -18,6 +20,7 @@ import fri.muc.peterus.muc_hw.services.LocationIntentService;
  */
 
 public class MainActivity extends AppCompatActivity {
+    private static final String TAG = "MainActivity";
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -28,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Start alarm.
         LocationSensingAlarmReceiver.startAlarm(ApplicationContext.getContext());
 
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);

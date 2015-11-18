@@ -3,17 +3,43 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/average_rssi_home"
-        android:id="@+id/summary_rssi_home_view" />
-    <TextView
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/average_rssi_home"
+            android:id="@+id/summary_rssi_home_view" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/average_rssi_home_output"
+            android:paddingLeft="10dp" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/average_rssi_work"
-        android:id="@+id/summary_rssi_work_view"
-        android:paddingTop="10dp" />
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/average_rssi_work"
+            android:id="@+id/summary_rssi_work_view" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/average_rssi_work_output"
+            android:paddingLeft="10dp"/>
+    </LinearLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
