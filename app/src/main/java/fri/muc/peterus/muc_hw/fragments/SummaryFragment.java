@@ -3,7 +3,6 @@ package fri.muc.peterus.muc_hw.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.util.Pair;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import fri.muc.peterus.muc_hw.tasks.RSSIQueryTask;
 /**
  * Created by peterus on 22.10.2015.
  */
+
 public class SummaryFragment extends Fragment implements RSSIQueryTask.TaskListener {
     private static final String TAG = "SummaryFragment";
     private TextView averageRSSIwork;
@@ -33,6 +33,11 @@ public class SummaryFragment extends Fragment implements RSSIQueryTask.TaskListe
 
         averageRSSIhome = (TextView) getView().findViewById(R.id.average_rssi_home_output);
         averageRSSIwork = (TextView) getView().findViewById(R.id.average_rssi_work_output);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         new RSSIQueryTask(this).execute("sleep");
         new RSSIQueryTask(this).execute("work");

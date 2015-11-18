@@ -55,7 +55,7 @@ public class WiFiConnectivityIntentService extends IntentService {
     }
 
     private void recordConnectionData(String SSID, String BSSID, int RSSI, long triggerId){
-        Log.d("LocationIntentService", "Storing:"+ SSID + " " + BSSID + " " + RSSI + " " + triggerId);
+        Log.d(TAG, "Storing:"+ SSID + " " + BSSID + " " + RSSI + " " + triggerId);
         SQLiteDatabase writableDatabase = mDatabaseHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(DBOpenHelper.SSID, SSID);

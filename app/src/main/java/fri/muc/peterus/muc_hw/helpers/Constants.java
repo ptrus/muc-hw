@@ -11,7 +11,7 @@ public class Constants {
     public static final int WORK_STOP = 16;
 
     // TODO change.
-    public static final int CLUST_THRESHOLD = 2000;
+    public static final int CLUST_THRESHOLD = 200;
 
 
 

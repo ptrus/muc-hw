@@ -1,8 +1,6 @@
 package fri.muc.peterus.muc_hw.services;
 
-import android.app.AlarmManager;
 import android.app.IntentService;
-import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -130,8 +128,8 @@ public class LocationIntentService extends IntentService implements GoogleApiCli
         writableDatabase.close();
         Log.d("LocationIntentService", "COUNT:" + count);
 
-        // We cluster every X readings.
-        if (count  % Constants.CLUST_THRESHOLD == 0){
+        // We cluster after X readings.
+        if (count == Constants.CLUST_THRESHOLD){
             Intent intent = new Intent(ApplicationContext.getContext(), LocationMachineLearningIntentService.class);
             startService(intent);
         }
@@ -175,7 +173,21 @@ public class LocationIntentService extends IntentService implements GoogleApiCli
             Calendar now = Calendar.getInstance();
             Calendar workStart = Calendar.getInstance();
             workStart.set(Calendar.HOUR_OF_DAY, Constants.WORK_START);
-            mAction = now.before(workStart) ? "sleep" : "work";
+            Calendar workEnd = Calendar.getInstance();
+            workEnd.set(Calendar.HOUR_OF_DAY, Constants.WORK_STOP);
+            Calendar sleepStart = Calendar.getInstance();
+            sleepStart.set(Calendar.HOUR_OF_DAY, Constants.SLEEP_START);
+            Calendar sleepEnd = Calendar.getInstance();
+            sleepEnd.set(Calendar.HOUR_OF_DAY, Constants.SLEEP_STOP);
+
+            if (now.before(workEnd) && workStart.before(now))
+                mAction = "work";
+
+            else if (now.before(sleepEnd) && sleepStart.before(now))
+                mAction = "sleep";
+            else{
+                mAction = "other";
+            }
         }
     }
 }

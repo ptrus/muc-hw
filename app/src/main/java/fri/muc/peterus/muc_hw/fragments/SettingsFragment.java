@@ -44,6 +44,7 @@ public class SettingsFragment extends Fragment {
     private Button confirmButton;
 
     private boolean formErrors;
+    private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -164,7 +165,6 @@ public class SettingsFragment extends Fragment {
         return "";
     }
 
-
     private void initFields() {
         // Init fields.
         profileImageView = (ImageView) getView().findViewById(R.id.settings_profile_imageView);
@@ -194,7 +194,7 @@ public class SettingsFragment extends Fragment {
             profileImageView.setImageBitmap(profileImage);
         }
 
-        SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
 
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

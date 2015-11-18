@@ -16,6 +16,7 @@ import fri.muc.peterus.muc_hw.helpers.ApplicationContext;
 import fri.muc.peterus.muc_hw.helpers.Constants;
 import fri.muc.peterus.muc_hw.helpers.SensingTriggerHelper;
 import fri.muc.peterus.muc_hw.services.LocationIntentService;
+import fri.muc.peterus.muc_hw.services.LocationMachineLearningIntentService;
 import fri.muc.peterus.muc_hw.services.WiFiConnectivityIntentService;
 
 /**
@@ -27,74 +28,64 @@ public class LocationSensingAlarmReceiver extends BroadcastReceiver{
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        String action = getActionAndUpdateAlarmPeriod();
-        if (action != null) {
-            SensingTriggerHelper.incrementSensingTriggerId();
+        updateAlarmPeriod();
+        SensingTriggerHelper.incrementSensingTriggerId();
 
-            Intent i = new Intent(context, LocationIntentService.class);
-            context.startService(i);
+        Intent i = new Intent(context, LocationIntentService.class);
+        context.startService(i);
 
-            Intent j = new Intent(context, WiFiConnectivityIntentService.class);
-            context.startService(j);
-        }
+        Intent j = new Intent(context, WiFiConnectivityIntentService.class);
+        context.startService(j);
 
         startAlarm(ApplicationContext.getContext());
     }
 
-    private String getActionAndUpdateAlarmPeriod() {
-        Calendar now = Calendar.getInstance();
-
-        Calendar workStart = Calendar.getInstance();
-        workStart.set(Calendar.HOUR_OF_DAY, Constants.WORK_START);
-        workStart.set(Calendar.MINUTE, 0);
-
-        Calendar workStop = Calendar.getInstance();
-        workStop.set(Calendar.HOUR_OF_DAY, Constants.WORK_STOP);
-        workStop.set(Calendar.MINUTE, 0);
-
-        Calendar sleepStart = Calendar.getInstance();
-        sleepStart.set(Calendar.HOUR_OF_DAY, Constants.SLEEP_START);
-        sleepStart.set(Calendar.MINUTE, 0);
-
-        Calendar sleepStop = Calendar.getInstance();
-        sleepStop.set(Calendar.HOUR_OF_DAY, Constants.SLEEP_STOP);
-        sleepStop.set(Calendar.MINUTE, 0);
-        if (now.before(workStop) && workStart.before(now)){
-            // At work.
+    private void updateAlarmPeriod() {
+        if (LocationMachineLearningIntentService.isLocationClusteringTrained())
             alarmPeriod = getSamplingUpdateInterval();
-            return "work";
-        }
+        else {
+            Calendar now = Calendar.getInstance();
 
-        else if (now.before(sleepStop) && sleepStart.before(now)){
-            // Sleeping.
-            alarmPeriod = getSamplingUpdateInterval();
-            return "sleep";
-        }
+            Calendar workStart = Calendar.getInstance();
+            workStart.set(Calendar.HOUR_OF_DAY, Constants.WORK_START);
+            workStart.set(Calendar.MINUTE, 0);
 
-        else{
-            if (now.before(sleepStart)){
-                // Before sleep start.
-                alarmPeriod = sleepStart.getTimeInMillis() - now.getTimeInMillis();
+            Calendar workStop = Calendar.getInstance();
+            workStop.set(Calendar.HOUR_OF_DAY, Constants.WORK_STOP);
+            workStop.set(Calendar.MINUTE, 0);
+
+            Calendar sleepStart = Calendar.getInstance();
+            sleepStart.set(Calendar.HOUR_OF_DAY, Constants.SLEEP_START);
+            sleepStart.set(Calendar.MINUTE, 0);
+
+            Calendar sleepStop = Calendar.getInstance();
+            sleepStop.set(Calendar.HOUR_OF_DAY, Constants.SLEEP_STOP);
+            sleepStop.set(Calendar.MINUTE, 0);
+            if (now.before(workStop) && workStart.before(now)) {
+                // At work.
+                alarmPeriod = getSamplingUpdateInterval();
+            } else if (now.before(sleepStop) && sleepStart.before(now)) {
+                // Sleeping.
+                alarmPeriod = getSamplingUpdateInterval();
+            } else {
+                if (now.before(sleepStart)) {
+                    // Before sleep start.
+                    alarmPeriod = sleepStart.getTimeInMillis() - now.getTimeInMillis();
+                } else if (now.before(workStart)) {
+                    // Before work start, and after sleep stop.
+                    alarmPeriod = workStart.getTimeInMillis() - now.getTimeInMillis();
+                } else {
+                    // After work stop.
+                    sleepStart.add(Calendar.DATE, 1);
+                    alarmPeriod = sleepStart.getTimeInMillis() - now.getTimeInMillis();
+                }
             }
-            else if (now.before(workStart)){
-                // Before work start, and after sleep stop.
-                alarmPeriod = workStart.getTimeInMillis() - now.getTimeInMillis();
-            }
-            else{
-                // After work stop.
-                sleepStart.add(Calendar.DATE, 1);
-                alarmPeriod = sleepStart.getTimeInMillis() - now.getTimeInMillis();
-            }
-            return null;
         }
     }
 
     public static void startAlarm(Context context){
         Intent intent = new Intent(ALARM_ACTION);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
-
-        // Cancel any previous alarms set.
-        pi.cancel();
 
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
