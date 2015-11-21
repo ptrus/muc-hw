@@ -31,6 +31,9 @@ import si.uni_lj.fri.lrss.machinelearningtoolkit.utils.Value;
  */
 public class LocationMachineLearningIntentService extends IntentService {
     private final static String TAG = "LocationMachineLearning";
+    private final static String QUERY = "SELECT * FROM " + DBOpenHelper.TABLE_NAME + " AS loc " +
+            "WHERE loc.label IS ? OR " +
+            " loc.label IS ?;";
     private MachineLearningManager mlManager;
     private Context mContext;
     private DensityClustering mClassifier;
@@ -91,7 +94,7 @@ public class LocationMachineLearningIntentService extends IntentService {
         ArrayList<Instance> instanceQ = new ArrayList<>();
 
         SQLiteDatabase db = mDatabaseHelper.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT * FROM " + DBOpenHelper.TABLE_NAME, new String[]{});
+        Cursor c = db.rawQuery(QUERY, new String[]{"sleep", "work"});
         Log.d(TAG, "Going through cursor");
         while(c.moveToNext()){
             int latId = c.getColumnIndex(DBOpenHelper.LAT);
@@ -112,7 +115,9 @@ public class LocationMachineLearningIntentService extends IntentService {
             Instance instance = new Instance(instanceValues);
             instanceQ.add(instance);
         }
-        Log.d(TAG, "Starting traning");
+        c.close();
+        db.close();
+        Log.d(TAG, "Starting training");
         try {
             mClassifier.train(instanceQ);
             Log.d(TAG, "Getting centroids");
@@ -141,5 +146,16 @@ public class LocationMachineLearningIntentService extends IntentService {
     public static boolean isLocationClusteringTrained(){
         SharedPreferences settings = ApplicationContext.getContext().getSharedPreferences(RegistrationActivity.ACC_PREFS, Context.MODE_PRIVATE);
         return settings.getBoolean("locationClusteringTrained", false);
+    }
+
+    public static void forgetClustering(){
+        SharedPreferences settings = ApplicationContext.getContext().getSharedPreferences(RegistrationActivity.ACC_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor settingsEditor = settings.edit();
+        settingsEditor.putBoolean("locationClusteringTrained", false);
+        settingsEditor.putFloat("sleepLat", (float) -1);
+        settingsEditor.putFloat("sleepLng", (float) -1);
+        settingsEditor.putFloat("workLat", (float) -1);
+        settingsEditor.putFloat("workLng", (float) -1);
+        settingsEditor.commit();
     }
 }

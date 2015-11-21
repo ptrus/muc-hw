@@ -5,16 +5,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.util.Log;
 
 import fri.muc.peterus.muc_hw.helpers.ApplicationContext;
 import fri.muc.peterus.muc_hw.helpers.DBOpenHelper;
 import fri.muc.peterus.muc_hw.helpers.SensingTriggerHelper;
+import fri.muc.peterus.muc_hw.helpers.WiFiHelper;
 
 /**
  * Created by peterus on 16.11.2015.
@@ -35,23 +32,15 @@ public class WiFiConnectivityIntentService extends IntentService {
 
     private void getConnectionData(){
         Context context = ApplicationContext.getContext();
-        WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-        Log.d(TAG, "Is conencted:" + isWiFiConnected());
-        if (isWiFiConnected()) {
+
+        if (WiFiHelper.isConnected(context)) {
+            WifiInfo wifiInfo = WiFiHelper.getWifiInfo(context);
             String SSID = wifiInfo.getSSID();
             String BSSID = wifiInfo.getBSSID();
             int RSSI = wifiInfo.getRssi();
             long triggerId = SensingTriggerHelper.getSensingTriggerId();
             recordConnectionData(SSID, BSSID, RSSI, triggerId);
-            Log.d(TAG, "ConnectionData: " + SSID + " " + BSSID + " " + RSSI);
         }
-    }
-
-    private boolean isWiFiConnected(){
-        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = connManager.getActiveNetworkInfo();
-        return activeNetwork != null && activeNetwork.isConnected();
     }
 
     private void recordConnectionData(String SSID, String BSSID, int RSSI, long triggerId){

@@ -14,5 +14,6 @@ public class Constants {
     public static final int CLUST_THRESHOLD = 200;
 
 
-
+    public static final long BACKUP_ACTION_ALARM_INTERVAL_MILLIS = 6 * 60 * 60 * 1000; // 6 Hours.
+    public static final long BACKUP_ACTION_ALARM_INTERVAL_REPEAT_MILLIS = 1 * 60 * 60 * 1000; //1 Hour.
 }

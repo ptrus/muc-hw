@@ -1,17 +1,15 @@
 package fri.muc.peterus.muc_hw.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.Toast;
 
 import fri.muc.peterus.muc_hw.adapters.SettingsPagerAdapter;
 import fri.muc.peterus.muc_hw.R;
 import fri.muc.peterus.muc_hw.helpers.ApplicationContext;
+import fri.muc.peterus.muc_hw.receivers.BackupAlarmReceiver;
 import fri.muc.peterus.muc_hw.receivers.LocationSensingAlarmReceiver;
 import fri.muc.peterus.muc_hw.services.LocationIntentService;
 
@@ -31,8 +29,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Start alarm.
+        // Start alarms.
         LocationSensingAlarmReceiver.startAlarm(ApplicationContext.getContext());
+        BackupAlarmReceiver.startAlarm(ApplicationContext.getContext());
 
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(getResources().getString(R.string.map)));

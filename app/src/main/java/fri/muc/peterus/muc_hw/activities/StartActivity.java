@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import fri.muc.peterus.muc_hw.services.WiFiConnectivityIntentService;
-
 /**
  * Created by peterus on 25.10.2015.
  */

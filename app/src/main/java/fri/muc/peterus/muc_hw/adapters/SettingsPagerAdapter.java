@@ -12,6 +12,7 @@ import fri.muc.peterus.muc_hw.fragments.SummaryFragment;
  * Created by peterus on 22.10.2015.
  */
 public class SettingsPagerAdapter extends FragmentStatePagerAdapter {
+    private static final String TAG = "SettingsPagerAdapter";
     private int nTabs;
 
     public SettingsPagerAdapter(FragmentManager fm, int nTabs){

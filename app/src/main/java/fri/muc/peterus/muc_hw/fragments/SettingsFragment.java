@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
@@ -175,7 +174,7 @@ public class SettingsFragment extends Fragment {
         confirmButton = (Button) getView().findViewById(R.id.settings_confirm_button);
 
         // Get stored data.
-        SharedPreferences settings = getActivity().getSharedPreferences(RegistrationActivity.ACC_PREFS, getActivity().MODE_PRIVATE);
+        SharedPreferences settings = getActivity().getSharedPreferences(RegistrationActivity.ACC_PREFS, Context.MODE_PRIVATE);
         String firstName = settings.getString("firstName", "Default Name");
         String lastName = settings.getString("lastName", "Default Name");
         String email = settings.getString("email", "default@email.com");
@@ -206,4 +205,5 @@ public class SettingsFragment extends Fragment {
         };
         settings.registerOnSharedPreferenceChangeListener(listener);
     }
+
 }
